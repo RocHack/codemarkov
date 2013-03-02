@@ -3,10 +3,19 @@ ddoc =
   views: {}
   lists: {}
   shows: {}
-#  rewrites:
-#    from: '', to: 'static/index.html'
-#    from: 'static/', to: 'static/index.html'
-#    from: '*', to: '../'
+  rewrites: [
+    from: ''
+    to: 'static/index.html'
+  ,
+    from: 'static/*'
+    to: 'static/*'
+  ,
+    from: 'theme/*'
+    to: 'theme/*'
+  ,
+    from: 'ngrams/:thing'
+    to: '_list/:thing/code_ngrams'
+  ]
 
 module.exports = ddoc
 
@@ -85,7 +94,7 @@ ddoc.views.code_ngrams =
   reduce: '_count'
 
 # Pick a random ngram weighted by frequency.
-ddoc.lists.pick_ngram = (head, req) ->
+ddoc.lists.pick = (head, req) ->
   provides 'json', ->
     allowEmpty = !('nonempty' in req.query)
 
@@ -116,7 +125,11 @@ ddoc.lists.pick_ngram = (head, req) ->
           break
 
     JSON.stringify chosenNgram
-    #JSON.stringify [rows, total, chosenIndex, row, random, chosenNgram]
+
+# Count ngrams
+ddoc.lists.count = (head, req) ->
+  provides 'json', ->
+    +getRow()?.value || 0
 
 ###
 ddoc.lists.people = (head, req) ->
