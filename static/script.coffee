@@ -1,3 +1,5 @@
+numRequests = 0
+
 loadJSON = (url, req, cb) ->
   r = new XMLHttpRequest
   r.open 'GET', url + '?' + encodeForm(req), true
@@ -9,6 +11,8 @@ loadJSON = (url, req, cb) ->
     finally
       cb data
       delete r.onreadystatechange
+  numRequests++
+  numRequestsText?.nodeValue = numRequests
   r.send null
 
 encodeObject = (arg) ->
@@ -161,6 +165,8 @@ nSelect = document.getElementById 'n-select'
 themeSelect = document.getElementById 'theme-select'
 themeLink = document.getElementById 'theme-link'
 codes = document.getElementById 'codes'
+reqsCounter = document.getElementById 'reqs-counter'
+numRequestsText = reqsCounter.firstChild
 
 form.addEventListener 'submit', (e) ->
   stopped = false
