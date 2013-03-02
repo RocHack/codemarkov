@@ -1,6 +1,6 @@
 {
-	"name": "couchcodegrams",
-	"version": "0.0.1",
+	"name": "codemarkov",
+	"version": "0.1.0",
 	"description": "Markov chains to generate code",
 	"attachments": ["static"],
 	"modules": ["lib", "views"],

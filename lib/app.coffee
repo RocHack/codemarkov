@@ -1,7 +1,5 @@
 
 ddoc =
-  _id: '_design/codegrams'
-  language: 'javascript'
   views: {}
   lists: {}
   shows: {}
