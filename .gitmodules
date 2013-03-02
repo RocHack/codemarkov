@@ -76,3 +76,6 @@
 [submodule "node_modules/mkdirp"]
 	path = node_modules/mkdirp
 	url = git://github.com/substack/node-mkdirp.git
+[submodule "syntax/Ruby"]
+	path = syntax/Ruby
+	url = git://github.com/stratuseditor/Ruby.sebundle.git
