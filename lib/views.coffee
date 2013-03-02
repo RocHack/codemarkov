@@ -12,9 +12,6 @@ views.code_ngrams =
       languages = require 'views/lib/languages'
       highlight = require 'views/lib/stratus-color/src/highlight'
 
-      for langName, lang of languages
-        emit langName, lang
-
       chunkify = (tokens, n) ->
         tokens.slice(i-n, i) for i in [n..tokens.length]
 
@@ -52,7 +49,7 @@ views.code_ngrams =
         tokens.push.apply tokens, tokensOnLine
         tokens.push newlineToken
       if n > 2 then tokens.push newlineToken for [3..n]
-      emit doc.name, tokens
+      #emit doc.name, tokens
 
       # do ngrams for token types
       for chunk in chunkify tokens, n
