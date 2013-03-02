@@ -1,0 +1,22 @@
+{
+	"name": "couchcodegrams",
+	"version": "0.0.1",
+	"description": "Markov chains to generate code",
+	"attachments": ["static"],
+	"modules": ["lib", "views"],
+	"modules_attachment": false,
+	"load": "lib/app",
+	"dependencies": {
+		"coffee-script-precompiler": null,
+		"attachments": null,
+		"modules": null,
+		"properties": null
+	},
+	"coffee-script": {
+		"modules": ["lib", "views", "build"],
+		"attachments": ["static"]
+	},
+	"postprocessors": {
+		"add": "build/add"
+	}
+}

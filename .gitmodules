@@ -1,0 +1,66 @@
+[submodule "lib/syntax/Markdown"]
+	path = lib/syntax/Markdown
+	url = git://github.com/stratuseditor/Markdown.sebundle.git
+[submodule "lib/syntax/JavaScript"]
+	path = lib/syntax/JavaScript
+	url = git://github.com/stratuseditor/JavaScript.sebundle.git
+[submodule "lib/syntax/Text"]
+	path = lib/syntax/Text
+	url = git://github.com/stratuseditor/Text.sebundle.git
+[submodule "lib/syntax/HTML"]
+	path = lib/syntax/HTML
+	url = git://github.com/stratuseditor/HTML.sebundle.git
+[submodule "lib/syntax/CoffeeScript"]
+	path = lib/syntax/CoffeeScript
+	url = git://github.com/stratuseditor/CoffeeScript.sebundle.git
+[submodule "lib/syntax/JSON"]
+	path = lib/syntax/JSON
+	url = git://github.com/stratuseditor/JSON.sebundle.git
+[submodule "lib/syntax/Bash"]
+	path = lib/syntax/Bash
+	url = git://github.com/stratuseditor/Bash.sebundle.git
+[submodule "lib/syntax/Java"]
+	path = lib/syntax/Java
+	url = git://github.com/stratuseditor/Java.sebundle.git
+[submodule "lib/syntax/Python"]
+	path = lib/syntax/Python
+	url = git://github.com/stratuseditor/Python.sebundle.git
+[submodule "lib/syntax/CSS"]
+	path = lib/syntax/CSS
+	url = git://github.com/stratuseditor/CSS.sebundle.git
+[submodule "lib/stratus-color"]
+	path = lib/stratus-color
+	url = git://github.com/stratuseditor/stratus-color.git
+[submodule "syntax/Markdown"]
+	path = syntax/Markdown
+	url = git://github.com/stratuseditor/Markdown.sebundle.git
+[submodule "syntax/JavaScript"]
+	path = syntax/JavaScript
+	url = git://github.com/stratuseditor/JavaScript.sebundle.git
+[submodule "syntax/Text"]
+	path = syntax/Text
+	url = git://github.com/stratuseditor/Text.sebundle.git
+[submodule "syntax/HTML"]
+	path = syntax/HTML
+	url = git://github.com/stratuseditor/HTML.sebundle.git
+[submodule "syntax/CoffeeScript"]
+	path = syntax/CoffeeScript
+	url = git://github.com/stratuseditor/CoffeeScript.sebundle.git
+[submodule "syntax/JSON"]
+	path = syntax/JSON
+	url = git://github.com/stratuseditor/JSON.sebundle.git
+[submodule "syntax/Bash"]
+	path = syntax/Bash
+	url = git://github.com/stratuseditor/Bash.sebundle.git
+[submodule "syntax/Java"]
+	path = syntax/Java
+	url = git://github.com/stratuseditor/Java.sebundle.git
+[submodule "syntax/Python"]
+	path = syntax/Python
+	url = git://github.com/stratuseditor/Python.sebundle.git
+[submodule "syntax/CSS"]
+	path = syntax/CSS
+	url = git://github.com/stratuseditor/CSS.sebundle.git
+[submodule "views/lib/stratus-color"]
+	path = views/lib/stratus-color
+	url = git://github.com/stratuseditor/stratus-color.git
