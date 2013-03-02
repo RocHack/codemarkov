@@ -1,7 +1,7 @@
 Codemarkov
 ==========
 
-Random code generation using Markov chains and CouchDB
+*Random code generation using Markov chains and CouchDB*
 
 Codemarkov uses the
 [stratus-color](https://github.com/stratuseditor/stratus-color) syntax
@@ -36,3 +36,25 @@ resembles real code.
 
 * Navigate to `yourdb/_design/codemarkov/static/index.html` to try out the code
 generator.
+
+### Syncing git repositories
+
+Codemarkov needs some code files to base the random code on.
+
+Two rudimentary scripts are included for uploading the contents of a git repo
+to a Codemarkov DB.
+
+* `codemarkov-put.sh`
+
+Used in a git repository, this script uploads files to a codemarkov db.  Edit
+the file to set the database URL. Use the script with argument `ls-files` to
+upload all files in the repo, or with argument `post-merge` to upload all files
+changed in the last merge.
+
+* `codemarkov-github-sync.sh`
+
+This script clones or updates all of a GitHub user or organization's
+repositories. It adds a post-merge hook for `codemarkov-put.sh` to upload the
+contents to Codemarkov. To use, edit the script and set the directory to store
+the repos, the user or org name, and location of `codemarkov-put.sh`.
+

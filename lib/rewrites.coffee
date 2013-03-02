@@ -10,4 +10,8 @@ module.exports = [
 ,
   from: 'ngrams/:thing'
   to: '_list/:thing/code_ngrams'
+,
+  method: 'PUT'
+  from: 'code/:id'
+  to: '_update/code/:id'
 ]
