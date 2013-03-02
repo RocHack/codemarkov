@@ -81,11 +81,10 @@ pickNgram = (prefix, cb) ->
   startkey = prefix
   endkey = prefix.concat {}
   # Get max rows, pick a value from that, and then find that row
-  loadJSON '../_view/code_ngrams',
+  loadJSON 'ngrams/count',
     startkey: prefix
     endkey: endkey
-  , (res) ->
-    max = res?.rows[0]?.value
+  , (max) ->
     index = max * Math.random()
 
     # Optimization: if the index is in the second half, reverse the
@@ -97,7 +96,7 @@ pickNgram = (prefix, cb) ->
       endkey = tmp
       index = max - index
 
-    loadJSON '../_list/pick_ngram/code_ngrams',
+    loadJSON 'ngrams/pick',
       group_level: prefix.length+1
       i: index
       startkey: startkey
@@ -175,7 +174,7 @@ form.addEventListener 'reset', (e) ->
 , false
 
 themeSelect.addEventListener 'change', (e) ->
-  themeLink.href = "../theme/#{this.value}.css"
+  themeLink.href = "theme/#{this.value}.css"
 , false
 
 # make an element for a code file with a given name

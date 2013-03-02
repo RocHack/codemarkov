@@ -16,7 +16,7 @@ ddoc.views.code_ngrams =
     if doc.type != 'code' then return
 
     # n-gram size
-    n = 3
+    n = 4
 
     try
       languages = require 'views/lib/languages'
