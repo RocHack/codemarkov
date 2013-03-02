@@ -3,7 +3,8 @@ views = module.exports
 views.code_ngrams =
   map: (doc) ->
 
-    if doc.type != 'code' then return
+    if doc.type != 'code' || doc.ignore
+      return
 
     # n-gram size
     n = 4
@@ -12,11 +13,11 @@ views.code_ngrams =
       languages = require 'views/lib/languages'
       highlight = require 'views/lib/stratus-color/src/highlight'
 
+      repeat = (value, n) ->
+        if n < 1 then [] else (value for [1..n])
+
       chunkify = (tokens, n) ->
         tokens.slice(i-n, i) for i in [n..tokens.length]
-
-      blanks = (n) ->
-        new Array(n).join(' ').split ' '
 
       matchLanguage = (language, fileName, firstLine) ->
         if language.fileTypes?
@@ -36,33 +37,49 @@ views.code_ngrams =
 
       language = fileToLanguage doc.name, doc.text
       if !highlight.hasScope language.name
+        if !language.syntax
+          language.syntax = {}
+          language.syntax[language.name] = {}
         highlight.addScopes language.syntax
 
-      # todo: make this not necessary
+      # special tokens
       newlineToken =
         type: 'newline'
         text: '\n'
+      eofToken =
+        type: null
+        text: ''
 
-      tokensByLine = highlight doc.text, language.name, format: 'json'
-      tokens = if n < 2 then [] else (newlineToken for [2..n])
+      # prepare contents
+      contents = doc.text
+      tab = languages.preference?.tab
+      contents = contents.replace /\t/g, tab if tab
+
+      # tokenize
+      tokensByLine = highlight contents, language.name, format: 'json'
+      # convert 2d array of tokens into flat array with newlines and eofs
+      tokens = [eofToken]
       for tokensOnLine in tokensByLine
         tokens.push.apply tokens, tokensOnLine
         tokens.push newlineToken
-      if n > 2 then tokens.push newlineToken for [3..n]
+      # remove trailing newline
+      tokens.pop()
+      # put n-1 eof tokens at the end so that the view can get to eof with any n
+      tokens.push.apply tokens, repeat eofToken, n-1
       #emit doc.name, tokens
 
-      # do ngrams for token types
+      # emit ngrams for token types
       for chunk in chunkify tokens, n
         tokenTypes = (token.type for token in chunk)
         emit [0, language.name].concat tokenTypes
 
-      # do ngrams for text in tokens
+      # emit ngrams for text in tokens
       for token in tokens
+        if token.type in ['newline', null] then continue
         # tokenize the text of this token
-        # mark start and end of text with ""
         textTokens = token.text.split /(?=\s+)/
-        padding = blanks n-1
-        textTokens = (padding.concat textTokens).concat padding
+        # mark start and end of text with ""
+        textTokens = [''].concat textTokens, repeat '', n-1
         for chunk in chunkify textTokens, n
           emit [1, language.name, token.type].concat chunk
 

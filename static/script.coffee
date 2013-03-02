@@ -51,6 +51,7 @@ generateCodeFile = (n) ->
     newLines = ->
       while pendingNewlines
         pendingNewlines--
+        # add line number to gutter
         lineEl = document.createElement 'li'
         codeEl.appendChild lineEl
         (gutter.appendChild document.createElement 'span')
@@ -89,7 +90,7 @@ pickNgram = (prefix, cb) ->
     startkey: prefix
     endkey: endkey
   , (max) ->
-    index = max * Math.random()
+    index = Math.floor max * Math.random()
 
     # Optimization: if the index is in the second half, reverse the
     # query and we will iterate on average half as far
@@ -112,12 +113,13 @@ pickNgram = (prefix, cb) ->
 pickTokenTypes = (language, n, tokenCb) ->
   next = (prevTokenTypes) ->
     pickTokenType language, n, prevTokenTypes, (tokenType) ->
+      if stopped or tokenType == null
+        return
       tokenCb tokenType
+      # continue generating tokens until null token is reached
       nextTokenTypes = prevTokenTypes[1..].concat tokenType
-      # continue generating tokens until reached n-1 newlines
-      if !stopped and !nextTokenTypes.every isNewline
-        next nextTokenTypes
-  startTokens = if n < 2 then [] else [0..n-2].map -> 'newline'
+      next nextTokenTypes
+  startTokens = if n < 2 then [] else [null]
   next startTokens
 
 # Pick a sequence of words for token contents
@@ -129,7 +131,7 @@ pickTokenWords = (language, tokenType, n, wordCb) ->
       # continue generating words until reached n-1 blanks
       if !stopped and nextWords.some Boolean
         next nextWords
-  startWords = if n < 2 then [] else [0..n-2].map -> ''
+  startWords = if n < 2 then [] else ['']
   next startWords
 
 # Pick a token type n-gram
