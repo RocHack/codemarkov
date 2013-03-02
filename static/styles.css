@@ -1,29 +1,25 @@
-#generate {
-	width: 36em;
-	max-width: 90%;
-	margin: 5% auto;
-}
-
 h1 {
 	margin: 0 0 .5em;
 }
 
-#codes {
-	border: 1px dashed #6E3399;
-	margin-top: 1em;
-	padding: 1em 1em 0;
+#generate {
+	width: 48em;
+	max-width: 90%;
+	margin: 5% auto;
 }
 
-#codes .code {
-	border-bottom: 1px solid #62A8CB;
-	margin-bottom: 1em;
+#theme-switcher {
+	float: right;
 }
 
-#codes .code-lines {
-	font-family: monospace;
-	white-space: pre;
+.code {
+	margin: 1em 0;
+	padding: 1em;
 }
 
+#codes .code > ul {
+	float: none;
+}
 
 .code .name {
 	font-weight: bold;

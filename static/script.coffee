@@ -39,28 +39,36 @@ generateCodeFile = (n) ->
       return
 
     codeEl = makeCodeFileElement fileName
+    gutter = codeEl.previousSibling
+
+    lineNum = 1
+    lineEl = null
+    pendingNewlines = 1
+    newLines = ->
+      while pendingNewlines
+        pendingNewlines--
+        lineEl = document.createElement 'li'
+        codeEl.appendChild lineEl
+        (gutter.appendChild document.createElement 'span')
+        .appendChild document.createTextNode lineNum++
+
     # start first line
-    lineEl = document.createElement 'li'
-    codeEl.appendChild lineEl
+    newLines()
+
     # pick tokens
     pickTokenTypes langName, n, (tokenType) ->
       if tokenType == 'newline'
-        # start a new line el
-        lineEl = document.createElement 'li'
-        codeEl.appendChild lineEl
-
+        # queue newlines until there is content to follow
+        pendingNewlines++
       else
+        # print pending newlines
+        newLines()
         # pick token contents
         tokenEl = document.createElement 'span'
         tokenEl.className = tokenTypeToClass tokenType
         lineEl.appendChild tokenEl
         pickTokenWords langName, tokenType, n, (word) ->
           tokenEl.appendChild document.createTextNode word
-
-        #gutter = document.createElement 'div'
-        #gutter.className = 'stratus-color-gutter'
-        #(gutter.appendChild document.createElement 'span')
-        #.appendChild document.createTextNode lineNum
 
 # Stop generating code
 stopGenerating = ->
@@ -123,13 +131,13 @@ pickTokenWords = (language, tokenType, n, wordCb) ->
 
 # Pick a token type n-gram
 pickTokenType = (language, n, prevTokens, cb) ->
-  console.log(language, prevTokens)
+  #console.log(language, prevTokens)
   start = [0, language].concat prevTokens
   pickNgram start, cb
 
 # Pick a word n-gram for token text
 pickTokenWord = (language, tokenType, n, prevWords, cb) ->
-  console.log(tokenType, prevWords)
+  #console.log(tokenType, prevWords)
   start = [1, language, tokenType].concat prevWords
   pickNgram start, cb
 
@@ -147,29 +155,12 @@ tokenTypeToClass = (type) ->
     cssClasses.push lastClass
   return cssClasses.join ' '
 
-###
-  lineHtml += "<li>#{ tokensToHtml(tokens) }</li>"
-  
-  gutter = if options.gutter == false
-    ""
-  else
-    lineCount = tokensByLine.length
-    html      = "<div class='stratus-color-gutter'>"
-    for i in [1..lineCount]
-      html += "<span>#{i}</span>"
-    html + "</div>"
-  
-  html  = "<div class='stratus-color'>"
-  html += gutter
-  html += "<ul>#{lineHtml}</ul></div>"
-  return html
-
-###
-
 # form stuff
 
 form = document.getElementById 'generate'
 nSelect = document.getElementById 'n-select'
+themeSelect = document.getElementById 'theme-select'
+themeLink = document.getElementById 'theme-link'
 codes = document.getElementById 'codes'
 
 form.addEventListener 'submit', (e) ->
@@ -183,19 +174,27 @@ form.addEventListener 'reset', (e) ->
   stopGenerating()
 , false
 
+themeSelect.addEventListener 'change', (e) ->
+  themeLink.href = "../theme/#{this.value}.css"
+, false
+
 # make an element for a code file with a given name
 # return an element in which to put code
 makeCodeFileElement = (name) ->
   outer = document.createElement 'div'
-  outer.className = 'code stratus-color'
+  outer.className = 'code stratus-color hi'
 
   nameEl = document.createElement 'div'
   nameEl.className = 'name'
   nameEl.appendChild document.createTextNode name
   outer.appendChild nameEl
 
-  inner = document.createElement 'ol'
-  inner.className = 'code-lines'
+  gutter = document.createElement 'div'
+  gutter.className = 'stratus-color-gutter'
+  outer.appendChild gutter
+
+  inner = document.createElement 'ul'
+  inner.className = ''
   outer.appendChild inner
 
   if codes.firstChild

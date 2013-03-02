@@ -64,3 +64,15 @@
 [submodule "views/lib/stratus-color"]
 	path = views/lib/stratus-color
 	url = git://github.com/stratuseditor/stratus-color.git
+[submodule "node_modules/stylus"]
+	path = node_modules/stylus
+	url = git://github.com/LearnBoost/stylus.git
+[submodule "node_modules/cssom"]
+	path = node_modules/cssom
+	url = git://github.com/NV/CSSOM.git
+[submodule "node_modules/debug"]
+	path = node_modules/debug
+	url = git://github.com/visionmedia/debug.git
+[submodule "node_modules/mkdirp"]
+	path = node_modules/mkdirp
+	url = git://github.com/substack/node-mkdirp.git

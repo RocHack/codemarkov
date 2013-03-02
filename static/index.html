@@ -1,8 +1,11 @@
 <!doctype html>
 <html>
 	<head>
-		<title>Couch-code-grams</title>
+		<title>Codemarkov</title>
 		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="../theme/main.css">
+		<link rel="stylesheet" type="text/css" href="../theme/Solarized-Light.css"
+			id="theme-link">
 		<link rel="stylesheet" type="text/css" href="styles.css">
 	</head>
 	<body>
@@ -15,8 +18,17 @@
 			</select>-->
 			<input type="submit" value="Generate">
 			<input type="reset" value="Stop">
-			<div id="codes">
+
+			<div id="theme-switcher">
+				Theme: <select id="theme-select">
+					<option>GitHub</option>
+					<option selected="selected">Solarized-Light</option>
+					<option>Idlefingers</option>
+					<option>Sublime</option>
+				</select>
 			</div>
+
+			<div id="codes"></div>
 		</form>
 		<script src="script.js"></script>
 	</body>
