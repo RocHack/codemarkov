@@ -26,12 +26,18 @@ loadMainCSS = (doc, cb) ->
 # Build CSS themes for the syntax highlighting
 loadThemeCSS = (doc, cb) ->
   fs.readdir themeDir, (err, files) ->
+    doc.themes = []
+    # Load the themes
     for file in files
       theme = file.replace /\.json$/, ''
       themePath = themeCSSPath + theme + '.css'
       css = themeToCSS theme, root: rootClass
       if !css then return cb new Error 'Unable to build theme.', null
       attachments.add doc, themePath, themePath, new Buffer css
+      # Save theme name and path to design doc for templates
+      doc.themes.push
+        value: theme
+        path: themePath
     cb null
 
 # Load syntax files into design document for the tokenizer view

@@ -8,8 +8,17 @@ h1 {
 	margin: 4% auto;
 }
 
+#reqs-counter {
+	vertical-align: middle;
+}
+
 #theme-switcher {
 	float: right;
+}
+
+#generate input,
+#generate select {
+	margin: 0px 0.2ex;
 }
 
 .code {

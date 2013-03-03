@@ -1,0 +1,33 @@
+{>base/}
+
+{<title}Codemarkov{/title}
+
+{<content}
+<form id="generate" action="">
+	<h1>Codemarkov</h1>
+
+	N=<select id="n-select">{#nSelect default=defaultN}
+		<option{#selected/}>{value}</option>{/nSelect}
+	</select>
+
+	<select id="languages">
+		<option value="" selected="selected">Any Language</option>
+		{#languages}<option>{.}</option>
+		{/languages}
+	</select>
+
+	<input type="submit" value="Generate">
+	<input type="reset" value="Stop">
+	<span id="reqs-counter">0</span>
+
+	<div id="theme-switcher">
+		<select id="themes">{#themes default=defaultTheme}
+			<option{#selected/} value="{path}">{value}</option>{/themes}
+		</select>
+	</div>
+
+	<div id="codes"></div>
+</form>
+
+<script src="static/script.js"></script>
+{/content}

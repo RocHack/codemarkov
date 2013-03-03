@@ -1,6 +1,10 @@
 module.exports = [
   from: ''
-  to: 'static/index.html'
+  to: '_list/home/code_ngrams'
+  query:
+    group_level: '2'
+    startkey: [0]
+    endkey: [1]
 ,
   from: 'static/*'
   to: 'static/*'

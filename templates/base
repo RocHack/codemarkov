@@ -1,0 +1,15 @@
+<!doctype html>
+<html>
+	<head>
+		<title>{+title}Codemarkov{/title}</title>
+		<meta charset="utf-8">
+		<link rel="stylesheet" type="text/css" href="theme/main.css">
+		<link rel="stylesheet" type="text/css" href="theme/{defaultTheme}.css"
+			id="theme-link">
+		<link rel="stylesheet" type="text/css" href="static/styles.css">
+	</head>
+	<body>
+		{+content}
+		{/content}
+	</body>
+</html>

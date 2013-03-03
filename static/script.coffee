@@ -15,19 +15,24 @@ loadJSON = (url, req, cb) ->
   numRequestsText?.nodeValue = numRequests
   r.send null
 
-encodeObject = (arg) ->
-  encodeURIComponent JSON.stringify arg
-
 encodeForm = (obj) ->
   (encodeURIComponent(key) + '=' + encodeURIComponent JSON.stringify val \
     for own key, val of obj) .join "&"
 
 stopped = false
+languageSelected = null
+
+# Get the user's selected language,
+# or pick a language randomly
+pickLanguage = (cb) ->
+  if languageSelected
+    cb languageSelected
+  else
+    pickNgram [0], cb
 
 # Pick a file name and language
 generateFileType = (cb) ->
-  # Pick random language
-  pickNgram [0], (langName) ->
+  pickLanguage (langName) ->
     if langName
       # Don't have file names yet
       fileName = langName
@@ -164,7 +169,8 @@ tokenTypeToClass = (type) ->
 
 form = document.getElementById 'generate'
 nSelect = document.getElementById 'n-select'
-themeSelect = document.getElementById 'theme-select'
+themeSelect = document.getElementById 'themes'
+languagesSelect = document.getElementById 'languages'
 themeLink = document.getElementById 'theme-link'
 codes = document.getElementById 'codes'
 reqsCounter = document.getElementById 'reqs-counter'
@@ -182,7 +188,11 @@ form.addEventListener 'reset', (e) ->
 , false
 
 themeSelect.addEventListener 'change', (e) ->
-  themeLink.href = "theme/#{this.value}.css"
+  themeLink.href = @value
+, false
+
+languagesSelect.addEventListener 'change', (e) ->
+  languageSelected = @value || null
 , false
 
 # make an element for a code file with a given name

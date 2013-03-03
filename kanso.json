@@ -5,12 +5,14 @@
 	"attachments": ["static"],
 	"modules": ["lib", "views"],
 	"modules_attachment": false,
+	"dust": { "templates": "templates" },
 	"load": "lib/app",
 	"dependencies": {
 		"coffee-script-precompiler": null,
 		"attachments": null,
 		"modules": null,
-		"properties": null
+		"properties": null,
+		"dust": null
 	},
 	"coffee-script": {
 		"modules": ["lib", "views", "build"],
