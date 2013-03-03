@@ -242,6 +242,10 @@ themeSelect.addEventListener 'change', (e) ->
   themeLink.href = @value
 , false
 
+languagesSelect.addEventListener 'change', (e) ->
+  languageSelected = @value || null
+, false
+
 reasonableSelect.addEventListener 'change', (e) ->
   reasonable = @value == 'reasonable'
 , false
