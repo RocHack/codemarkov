@@ -79,3 +79,21 @@
 [submodule "syntax/Ruby"]
 	path = syntax/Ruby
 	url = git://github.com/stratuseditor/Ruby.sebundle.git
+[submodule "syntax/Haskell"]
+	path = syntax/Haskell
+	url = git://github.com/stratuseditor/Haskell.sebundle.git
+[submodule "syntax/C"]
+	path = syntax/C
+	url = git://github.com/stratuseditor/C.sebundle.git
+[submodule "syntax/C.PlusPlus"]
+	path = syntax/C.PlusPlus
+	url = git://github.com/stratuseditor/C.PlusPlus.sebundle.git
+[submodule "syntax/Go"]
+	path = syntax/Go
+	url = git://github.com/stratuseditor/Go.sebundle.git
+[submodule "syntax/Make"]
+	path = syntax/Make
+	url = git://github.com/stratuseditor/Make.sebundle.git
+[submodule "syntax/YAML"]
+	path = syntax/YAML
+	url = git://github.com/stratuseditor/YAML.sebundle.git
