@@ -5,6 +5,7 @@ module.exports = [
     group_level: '2'
     startkey: [0]
     endkey: [1]
+    stale: 'ok'
 ,
   from: 'static/*'
   to: 'static/*'
