@@ -9,6 +9,12 @@ views.code_ngrams =
     # n-gram size
     n = 4
 
+    # special tokens
+    newlineToken =
+      type: 'newline'
+    eofToken =
+      type: null
+
     try
       languages = require 'views/lib/languages'
       highlight = require 'views/lib/stratus-color/src/highlight'
@@ -42,14 +48,6 @@ views.code_ngrams =
           language.syntax[language.name] = {}
         highlight.addScopes language.syntax
 
-      # special tokens
-      newlineToken =
-        type: 'newline'
-        text: '\n'
-      eofToken =
-        type: null
-        text: ''
-
       # prepare contents
       contents = doc.text
       tab = languages.preference?.tab
@@ -73,15 +71,25 @@ views.code_ngrams =
         tokenTypes = (token.type for token in chunk)
         emit [0, language.name].concat tokenTypes
 
+      subtokens = []
+
       # emit ngrams for text in tokens
       for token in tokens
-        if token.type in ['newline', null] then continue
+        if token.type in ['newline', null]
+          subtokens.push [token.type]
+          continue
         # tokenize the text of this token
         textTokens = token.text.split /(?=\s+)/
+        for textToken in textTokens
+          subtokens.push [token.type, textToken]
         # mark start and end of text with ""
         textTokens = [''].concat textTokens, repeat '', n-1
         for chunk in chunkify textTokens, n
           emit [1, language.name, token.type].concat chunk
+
+      # emit ngrams for token-words
+      for chunk in chunkify subtokens, n
+        emit [2, language.name].concat chunk
 
     catch e
       emit 'error', e

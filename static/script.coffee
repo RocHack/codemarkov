@@ -21,6 +21,7 @@ encodeForm = (obj) ->
 
 stopped = false
 languageSelected = null
+reasonable = true
 
 # Get the user's selected language,
 # or pick a language randomly
@@ -65,20 +66,45 @@ generateCodeFile = (n) ->
     # start first line
     newLines()
 
-    # pick tokens
-    pickTokenTypes langName, n, (tokenType) ->
-      if tokenType == 'newline'
-        # queue newlines until there is content to follow
-        pendingNewlines++
-      else
-        # print pending newlines
-        newLines()
-        # pick token contents
-        tokenEl = document.createElement 'span'
-        tokenEl.className = tokenTypeToClass tokenType
-        lineEl.appendChild tokenEl
-        pickTokenWords langName, tokenType, n, (word) ->
-          tokenEl.appendChild document.createTextNode word
+    if reasonable
+      # in reasonable mode, each ngram is a word from a token,
+      # with the token type
+      newToken = (type) ->
+        el = document.createElement 'span'
+        el.className = tokenTypeToClass type
+        lineEl.appendChild el
+        el
+
+      # pick tokens
+      prevTokenType = null
+      tokenEl = null
+      pickTokenWords langName, n, (tokenType, word) ->
+        if tokenType == 'newline'
+          # queue newlines until there is content to follow
+          pendingNewlines++
+        else
+          # print pending newlines
+          newLines()
+          if tokenType != prevTokenType
+            tokenEl = newToken tokenType
+            tokenEl.appendChild document.createTextNode word
+
+    else
+      # insane mode
+      # separate markov chains for token types and words within token text
+      pickTokenTypes langName, n, (tokenType) ->
+        if tokenType == 'newline'
+          # queue newlines until there is content to follow
+          pendingNewlines++
+        else
+          # print pending newlines
+          newLines()
+          # pick token contents
+          tokenEl = document.createElement 'span'
+          tokenEl.className = tokenTypeToClass tokenType
+          lineEl.appendChild tokenEl
+          pickWordTokens langName, tokenType, n, (word) ->
+            tokenEl.appendChild document.createTextNode word
 
 # Stop generating code
 stopGenerating = ->
@@ -131,9 +157,9 @@ pickTokenTypes = (language, n, tokenCb) ->
   next startTokens
 
 # Pick a sequence of words for token contents
-pickTokenWords = (language, tokenType, n, wordCb) ->
+pickWordTokens = (language, tokenType, n, wordCb) ->
   next = (prevWords) ->
-    pickTokenWord language, tokenType, prevWords, (word) ->
+    pickWordToken language, tokenType, prevWords, (word) ->
       wordCb word if word
       nextWords = last n-1, prevWords.concat word
       # continue generating words until reached n-1 blanks
@@ -142,6 +168,20 @@ pickTokenWords = (language, tokenType, n, wordCb) ->
   startWords = if n < 2 then [] else ['']
   next startWords
 
+# Pick a sequence of token-words
+pickTokenWords = (language, n, tokenCb) ->
+  next = (prevTokenWords) ->
+    pickTokenWord language, prevTokenWords, (tokenWord) ->
+      [type, word] = tokenWord
+      if stopped or type == null
+        return
+      tokenCb type, word
+      # continue generating tokens until null token is reached
+      nextTokenWords = last n-1, prevTokenWords.concat [tokenWord]
+      next nextTokenWords
+  startTokenWords = if n < 2 then [] else [[null]]
+  next startTokenWords
+
 # Pick a token type n-gram
 pickTokenType = (language, prevTokens, cb) ->
   #console.log(language, prevTokens)
@@ -149,9 +189,15 @@ pickTokenType = (language, prevTokens, cb) ->
   pickNgram start, cb
 
 # Pick a word n-gram for token text
-pickTokenWord = (language, tokenType, prevWords, cb) ->
+pickWordToken = (language, tokenType, prevWords, cb) ->
   #console.log(tokenType, prevWords)
   start = [1, language, tokenType].concat prevWords
+  pickNgram start, cb
+
+# Pick an ngram for a word-token (word of a token type)
+pickTokenWord = (language, prevTokenWords, cb) ->
+  #console.log(tokenType, prevWords)
+  start = [2, language].concat prevTokenWords
   pickNgram start, cb
 
 # css stuff
@@ -170,10 +216,12 @@ tokenTypeToClass = (type) ->
 
 # form stuff
 
-form = document.getElementById 'generate'
 nSelect = document.getElementById 'n-select'
 themeSelect = document.getElementById 'themes'
 languagesSelect = document.getElementById 'languages'
+reasonableSelect = document.getElementById 'reasonable-select'
+
+form = document.getElementById 'generate'
 themeLink = document.getElementById 'theme-link'
 codes = document.getElementById 'codes'
 reqsCounter = document.getElementById 'reqs-counter'
@@ -194,8 +242,8 @@ themeSelect.addEventListener 'change', (e) ->
   themeLink.href = @value
 , false
 
-languagesSelect.addEventListener 'change', (e) ->
-  languageSelected = @value || null
+reasonableSelect.addEventListener 'change', (e) ->
+  reasonable = @value == 'reasonable'
 , false
 
 # make an element for a code file with a given name
