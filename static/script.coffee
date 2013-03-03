@@ -114,15 +114,18 @@ pickNgram = (prefix, cb) ->
       descending: descending
     , (ngram) -> cb ngram?[ngram.length-1]
 
+last = (n, array) ->
+  if n then array[-n..] else []
+
 # Pick a sequence of token types (n>=1)
 pickTokenTypes = (language, n, tokenCb) ->
   next = (prevTokenTypes) ->
-    pickTokenType language, n, prevTokenTypes, (tokenType) ->
+    pickTokenType language, prevTokenTypes, (tokenType) ->
       if stopped or tokenType == null
         return
       tokenCb tokenType
       # continue generating tokens until null token is reached
-      nextTokenTypes = prevTokenTypes[1..].concat tokenType
+      nextTokenTypes = last n-1, prevTokenTypes.concat tokenType
       next nextTokenTypes
   startTokens = if n < 2 then [] else [null]
   next startTokens
@@ -130,9 +133,9 @@ pickTokenTypes = (language, n, tokenCb) ->
 # Pick a sequence of words for token contents
 pickTokenWords = (language, tokenType, n, wordCb) ->
   next = (prevWords) ->
-    pickTokenWord language, tokenType, n, prevWords, (word) ->
+    pickTokenWord language, tokenType, prevWords, (word) ->
       wordCb word if word
-      nextWords = prevWords[1..].concat word
+      nextWords = last n-1, prevWords.concat word
       # continue generating words until reached n-1 blanks
       if !stopped and nextWords.some Boolean
         next nextWords
@@ -140,13 +143,13 @@ pickTokenWords = (language, tokenType, n, wordCb) ->
   next startWords
 
 # Pick a token type n-gram
-pickTokenType = (language, n, prevTokens, cb) ->
+pickTokenType = (language, prevTokens, cb) ->
   #console.log(language, prevTokens)
   start = [0, language].concat prevTokens
   pickNgram start, cb
 
 # Pick a word n-gram for token text
-pickTokenWord = (language, tokenType, n, prevWords, cb) ->
+pickTokenWord = (language, tokenType, prevWords, cb) ->
   #console.log(tokenType, prevWords)
   start = [1, language, tokenType].concat prevWords
   pickNgram start, cb
