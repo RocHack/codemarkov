@@ -1,4 +1,5 @@
 dust = require 'dust'
+ngrams = require 'views/lib/ngrams'
 
 lists = module.exports
 
@@ -55,7 +56,7 @@ lists.home = (head, req) ->
     languages.sort (a, b) -> b.tokens - a.tokens
     languages = languages.map (lang) -> lang.name
 
-    maxN = 4
+    maxN = ngrams.n
     defaultN = 3
     defaultTheme = 'Solarized-Light'
 
