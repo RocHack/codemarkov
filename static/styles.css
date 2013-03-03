@@ -1,15 +1,26 @@
+body {
+	font-family: 'Roboto', sans-serif;
+}
+
 h1 {
+	font-family: 'Roboto Condensed', Arial, sans-serif;
+	font-weight: 400;
 	margin: 0 0 .5em;
+}
+
+p {
+	margin: 1em 0;
 }
 
 #generate {
 	width: 48em;
 	max-width: 90%;
 	margin: 4% auto;
+	vertical-align: bottom;
 }
 
 #reqs-counter {
-	vertical-align: middle;
+	vertical-align: -15%;
 }
 
 #theme-switcher {
@@ -19,6 +30,11 @@ h1 {
 #generate input,
 #generate select {
 	margin: 0px 0.2ex;
+}
+
+#footer {
+	text-align: right;
+	vertical-align: top;
 }
 
 .code {
