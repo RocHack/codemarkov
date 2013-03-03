@@ -26,13 +26,15 @@ resembles real code.
 ## Usage
 
 * Add some content to the database, in documents of this form:
-    
-    {
-        "_id": "...",
-        "type": "code",
-        "name": "example.js",
-        "text": "the text"
-    }
+
+```json
+{
+    "_id": "path:example.ja",
+    "type": "code",
+    "name": "example.js",
+    "text": "the text"
+}
+```
 
 * Navigate to `yourdb/_design/codemarkov/static/index.html` to try out the code
 generator.
