@@ -66,6 +66,7 @@ ngrams.map = (doc) ->
       for chunk in chunkify tokens, n
         tokenTypes = (token.type for token in chunk)
         emit [0, language.name].concat tokenTypes
+        emit [3, language.name].concat chunk
 
       subtokens = []
 

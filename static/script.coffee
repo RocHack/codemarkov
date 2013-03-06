@@ -21,7 +21,7 @@ encodeForm = (obj) ->
 
 stopped = false
 languageSelected = null
-reasonable = true
+mode = 'reasonable'
 
 # Get the user's selected language,
 # or pick a language randomly
@@ -66,7 +66,7 @@ generateCodeFile = (n) ->
     # start first line
     newLines()
 
-    if reasonable
+    if mode == 'reasonable'
       # in reasonable mode, each ngram is a word from a token,
       # with the token type
       newToken = (type) ->
@@ -89,6 +89,25 @@ generateCodeFile = (n) ->
             tokenEl = newToken tokenType
             tokenEl.appendChild document.createTextNode word
 
+    else if mode == 'whole token'
+      # each ngram is a token
+      newToken = (token) ->
+        el = document.createElement 'span'
+        el.className = tokenTypeToClass token.type
+        lineEl.appendChild el
+        el.appendChild document.createTextNode token.text
+
+      # pick tokens
+      prevToken = null
+      pickTokens langName, n, (token) ->
+        if token.type == 'newline'
+          # queue newlines until there is content to follow
+          pendingNewlines++
+        else
+          # print pending newlines
+          newLines()
+          newToken token
+
     else
       # insane mode
       # separate markov chains for token types and words within token text
@@ -103,8 +122,9 @@ generateCodeFile = (n) ->
           tokenEl = document.createElement 'span'
           tokenEl.className = tokenTypeToClass tokenType
           lineEl.appendChild tokenEl
-          pickWordTokens langName, tokenType, n, (word) ->
-            tokenEl.appendChild document.createTextNode word
+          do (tokenEl) ->
+            pickWordTokens langName, tokenType, n, (word) ->
+              tokenEl.appendChild document.createTextNode word
 
 # Stop generating code
 stopGenerating = ->
@@ -113,9 +133,10 @@ stopGenerating = ->
 isNewline = (type) -> type == 'newline'
 
 # Pick a random n-gram from the couch with a prefix
-pickNgram = (prefix, cb) ->
+pickNgram = (prefix, cb, extraEnd) ->
+  sentinel = if extraEnd then {"\u9999":1} else {}
   startkey = prefix
-  endkey = prefix.concat {}
+  endkey = prefix.concat sentinel
   # Get max rows, pick a value from that, and then find that row
   loadJSON 'ngrams/count',
     startkey: prefix
@@ -182,6 +203,19 @@ pickTokenWords = (language, n, tokenCb) ->
   startTokenWords = if n < 2 then [] else [[null]]
   next startTokenWords
 
+# Pick a sequence of tokens
+pickTokens = (language, n, tokenCb) ->
+  next = (prevTokens) ->
+    pickToken language, prevTokens, (token) ->
+      if stopped or token.type == null
+        return
+      tokenCb token
+      # continue generating tokens until null token is reached
+      nextToken = last n-1, prevTokens.concat token
+      next nextToken
+  startTokens = if n < 2 then [] else [type: null]
+  next startTokens
+
 # Pick a token type n-gram
 pickTokenType = (language, prevTokens, cb) ->
   #console.log(language, prevTokens)
@@ -199,6 +233,11 @@ pickTokenWord = (language, prevTokenWords, cb) ->
   #console.log(tokenType, prevWords)
   start = [2, language].concat prevTokenWords
   pickNgram start, cb
+
+# Pick an ngram for a token
+pickToken = (language, prevTokens, cb) ->
+  start = [3, language].concat prevTokens
+  pickNgram start, cb, true
 
 # css stuff
 
@@ -247,7 +286,7 @@ languagesSelect.addEventListener 'change', (e) ->
 , false
 
 reasonableSelect.addEventListener 'change', (e) ->
-  reasonable = @value == 'reasonable'
+  mode = @value
 , false
 
 # make an element for a code file with a given name
